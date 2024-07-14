@@ -2,21 +2,18 @@ import { BadRequestException, Injectable, InternalServerErrorException, NotFound
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { Pokemon } from './entities/pokemon.entity';
-import { isValidObjectId, Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
+import { PokemonRepository } from './pokemon.repository';
 
 @Injectable()
 export class PokemonService {
   constructor(
-    @InjectModel(Pokemon.name)
-    private readonly pokemons: Model<Pokemon>
+    private readonly repository: PokemonRepository,
   ) { }
-
 
   async create(createPokemonDto: CreatePokemonDto): Promise<Pokemon> {
     try {
       createPokemonDto.name.toLowerCase();
-      const pokemon = await this.pokemons.create(createPokemonDto);
+      const pokemon = await this.repository.createPokemon(createPokemonDto);
       return pokemon;
     } catch (ex) {
       this.handleExeption(ex);
@@ -24,31 +21,23 @@ export class PokemonService {
   }
 
   async findAll(): Promise<Pokemon[]> {
-    return await this.pokemons.find();
+    return await this.repository.findPokemons();
   }
 
-  async findOne(term: string) {
+  async findOne(term: string): Promise<Pokemon> {
     let pokemon: Pokemon;
-    const termIsName = isNaN(Number(term));
-    const termIsId = isValidObjectId(term);
 
-    if (termIsId) {
-      pokemon = await this.pokemons.findById(term);
+    try {
+      pokemon = await this.repository.findOnePokemon(term);
+
+    } catch (ex) {
+      this.handleExeption(ex);
     }
 
-    if (!termIsId && termIsName) {
-      pokemon = await this.pokemons.findOne({ name: 'term' });
-    }
-
-    if (!termIsId && !termIsName) {
-      pokemon = await this.pokemons.findOne({ no: term });
-    }
-
-    if (!pokemon) {
-      throw new NotFoundException(`Pokemon "${term}" not exist`);
-    }
+    if (!pokemon) throw new NotFoundException(`Pokemon "${term}" not exist`);
 
     return pokemon;
+
   }
 
   async update(term: string, updatePokemonDto: UpdatePokemonDto): Promise<Pokemon> {
@@ -56,34 +45,29 @@ export class PokemonService {
     updatePokemonDto.name = updatePokemonDto.name?.toLowerCase();
 
     try {
-      pokemon = await this.pokemons.findByIdAndUpdate(
+      pokemon = await this.repository.updatePokemon(
         pokemon.id,
         updatePokemonDto,
-        { new: true },
       );
     } catch (ex) {
       this.handleExeption(ex);
-
     }
 
     return pokemon;
   }
 
-  async remove(term: string): Promise<void> {
-    // const pokemon = await this.findOne(term);
-    // try {
-    //   await pokemon.deleteOne();
-    // } catch (ex) {
-    //   this.handleExeption(ex);
-    // }
+  async remove(id: string): Promise<void> {
+    let isDeleted: boolean;
 
     try {
-      const { deletedCount } = await this.pokemons.deleteOne({ _id: term });
-      if (deletedCount === 0) {
-        throw new BadRequestException(`Pokemon do not exist with id ${term}`);
-      }
+      isDeleted = await this.repository.deletePokemon(id);
+
     } catch (ex) {
       this.handleExeption(ex);
+    }
+
+    if (!isDeleted) {
+      throw new BadRequestException(`Pokemon do not exist with id ${id}`);
     }
   }
 
