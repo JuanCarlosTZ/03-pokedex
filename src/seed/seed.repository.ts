@@ -1,16 +1,16 @@
 import { PokemonModel } from "src/common/models/pokemon-model.model";
-import { RepositoryInterface } from "./interfaces/repository.interface";
+import { RepositoryAbstract } from "./abstracts/repository.abstract";
 import { Pokemon } from "src/pokemon/entities/pokemon.entity";
 import { Injectable } from "@nestjs/common";
-import { MongodbDatasource } from "./datasources/mogodb.datasource";
 import { PokeResponse } from "./interfaces/poke-response.interface";
-import { HttpProvider } from "src/common/providers/http.provider";
+import { HttpAdapterAbstract } from "src/common/abstracts/http-adapter.abstract";
+import { DatasourceAbstract } from "./abstracts/datasource.abstract";
 
 @Injectable()
-export class SeedRepository implements RepositoryInterface {
+export class SeedRepository implements RepositoryAbstract {
     constructor(
-        private readonly httpProvider: HttpProvider,
-        private readonly pokemons: MongodbDatasource,
+        private readonly httpProvider: HttpAdapterAbstract,
+        private readonly datasource: DatasourceAbstract,
     ) { }
 
     async get(url: string): Promise<PokeResponse> {
@@ -18,11 +18,11 @@ export class SeedRepository implements RepositoryInterface {
     }
 
     async createPokemonLote(pokemons: PokemonModel[]): Promise<Pokemon[]> {
-        return await this.pokemons.createPokemonLote(pokemons);
+        return await this.datasource.createPokemonLote(pokemons);
     }
 
     async dropPokemons(): Promise<void> {
-        return await this.pokemons.dropPokemons();
+        return await this.datasource.dropPokemons();
     }
 
 }

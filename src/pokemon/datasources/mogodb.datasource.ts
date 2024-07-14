@@ -1,13 +1,14 @@
-import { DatasourceInterface } from "../interfaces/datasource.interface";
+
 import { InjectModel } from "@nestjs/mongoose";
 import { isValidObjectId, Model } from "mongoose";
 import { Pokemon } from "src/pokemon/entities/pokemon.entity";
 import { Injectable } from "@nestjs/common";
 import { CreatePokemonDto } from "../dto/create-pokemon.dto";
 import { UpdatePokemonDto } from "../dto/update-pokemon.dto";
+import { DatasourceAbstract } from "../abstracts/datasource.abstract";
 
 @Injectable()
-export class MongodbDatasource implements DatasourceInterface {
+export class MongodbDatasource implements DatasourceAbstract {
     constructor(
         @InjectModel(Pokemon.name)
         private readonly pokemons: Model<Pokemon>

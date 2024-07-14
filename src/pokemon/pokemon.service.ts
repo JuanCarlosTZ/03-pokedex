@@ -2,12 +2,12 @@ import { BadRequestException, Injectable, InternalServerErrorException, NotFound
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { Pokemon } from './entities/pokemon.entity';
-import { PokemonRepository } from './pokemon.repository';
+import { RepositoryAbstract } from './abstracts/repository.abstract';
 
 @Injectable()
 export class PokemonService {
   constructor(
-    private readonly repository: PokemonRepository,
+    private readonly repository: RepositoryAbstract,
   ) { }
 
   async create(createPokemonDto: CreatePokemonDto): Promise<Pokemon> {

@@ -1,14 +1,14 @@
 import { CreatePokemonDto } from "./dto/create-pokemon.dto";
 import { UpdatePokemonDto } from "./dto/update-pokemon.dto";
 import { Pokemon } from "./entities/pokemon.entity";
-import { RepositoryInterface } from "./interfaces/repository.interface";
-import { MongodbDatasource } from "./datasources/mogodb.datasource";
 import { Injectable } from "@nestjs/common";
+import { RepositoryAbstract } from "./abstracts/repository.abstract";
+import { DatasourceAbstract } from "./abstracts/datasource.abstract";
 
 @Injectable()
-export class PokemonRepository implements RepositoryInterface {
+export class PokemonRepository implements RepositoryAbstract {
     constructor(
-        private readonly datasource: MongodbDatasource,
+        private readonly datasource: DatasourceAbstract,
     ) { }
 
     async createPokemon(createPokemonDto: CreatePokemonDto): Promise<Pokemon> {
