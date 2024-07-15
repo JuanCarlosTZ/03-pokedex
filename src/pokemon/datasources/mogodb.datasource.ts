@@ -6,6 +6,7 @@ import { Injectable } from "@nestjs/common";
 import { CreatePokemonDto } from "../dto/create-pokemon.dto";
 import { UpdatePokemonDto } from "../dto/update-pokemon.dto";
 import { DatasourceAbstract } from "../abstracts/datasource.abstract";
+import { PaginationDto } from "src/common/dto/pagination.dto";
 
 @Injectable()
 export class MongodbDatasource implements DatasourceAbstract {
@@ -18,8 +19,12 @@ export class MongodbDatasource implements DatasourceAbstract {
         return await this.pokemons.create(createPokemonDto);
     }
 
-    async findPokemons(): Promise<Pokemon[]> {
-        return await this.pokemons.find();
+    async findPokemons(paginationDto: PaginationDto): Promise<Pokemon[]> {
+        return await this.pokemons.find()
+            .limit(paginationDto.limit)
+            .skip(paginationDto.offset)
+            .sort('no')
+            .select('-__v');
     }
 
     async findOnePokemon(term: string): Promise<Pokemon | null> {

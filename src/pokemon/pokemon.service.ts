@@ -3,6 +3,7 @@ import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { Pokemon } from './entities/pokemon.entity';
 import { RepositoryAbstract } from './abstracts/repository.abstract';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class PokemonService {
@@ -20,8 +21,18 @@ export class PokemonService {
     }
   }
 
-  async findAll(): Promise<Pokemon[]> {
-    return await this.repository.findPokemons();
+  async findAll(paginationDto: PaginationDto): Promise<Pokemon[]> {
+    const { limit, offset } = paginationDto;
+    paginationDto.limit = limit ?? 20;
+    paginationDto.offset = offset ?? 0;
+
+    try {
+      return await this.repository.findPokemons(paginationDto);
+
+    } catch (ex) {
+      this.handleExeption(ex);
+    }
+
   }
 
   async findOne(term: string): Promise<Pokemon> {

@@ -4,6 +4,7 @@ import { Pokemon } from "./entities/pokemon.entity";
 import { Injectable } from "@nestjs/common";
 import { RepositoryAbstract } from "./abstracts/repository.abstract";
 import { DatasourceAbstract } from "./abstracts/datasource.abstract";
+import { PaginationDto } from "src/common/dto/pagination.dto";
 
 @Injectable()
 export class PokemonRepository implements RepositoryAbstract {
@@ -14,8 +15,8 @@ export class PokemonRepository implements RepositoryAbstract {
     async createPokemon(createPokemonDto: CreatePokemonDto): Promise<Pokemon> {
         return await this.datasource.createPokemon(createPokemonDto);
     }
-    async findPokemons(): Promise<Pokemon[]> {
-        return await this.datasource.findPokemons();
+    async findPokemons(paginationDto: PaginationDto): Promise<Pokemon[]> {
+        return await this.datasource.findPokemons(paginationDto);
     }
     async findOnePokemon(term: string): Promise<Pokemon> {
         return await this.datasource.findOnePokemon(term);

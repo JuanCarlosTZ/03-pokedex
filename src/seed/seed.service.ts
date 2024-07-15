@@ -14,7 +14,7 @@ export class SeedService {
 
   async executeSeed() {
     try {
-      const responsePokemons = await this.seedRepository.get('https://pokeapi.co/api/v2/pokemon?limit=10');
+      const responsePokemons = await this.seedRepository.get('https://pokeapi.co/api/v2/pokemon?limit=650');
       await this.seedRepository.dropPokemons();
 
       const pokemonsToInsert: PokemonModel[] = [];
