@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const port = process.env.PORT;
   app.setGlobalPrefix('api/v2');
   app.useGlobalPipes(
     new ValidationPipe({
@@ -15,6 +16,7 @@ async function bootstrap() {
       }
     })
   )
-  await app.listen(3000);
+  await app.listen(port);
+  console.log(`App running on port ${port}`);
 }
 bootstrap();
