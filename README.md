@@ -51,3 +51,10 @@ GET - http://localhost:3000/api/v2/seed
 ```
 docker-compose -f docker-compose.prod.yaml --env-file .env.prod up --build
 ```
+
+## Notas
+Heroku redeploy sin cambios:
+```
+git commit --allow-empty -m "tigger Heroku deploy"
+git pudh heroku <master|main>
+```
