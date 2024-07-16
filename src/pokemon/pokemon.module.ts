@@ -7,6 +7,7 @@ import { MongodbDatasource } from './datasources/mogodb.datasource';
 import { PokemonRepository } from './pokemon.repository';
 import { DatasourceAbstract } from './abstracts/datasource.abstract';
 import { RepositoryAbstract } from './abstracts/repository.abstract';
+import { ConfigModule } from '@nestjs/config';
 
 const mongooseModule = MongooseModule.forFeature([
   {
@@ -24,6 +25,9 @@ const mongooseModule = MongooseModule.forFeature([
     { provide: DatasourceAbstract, useExisting: MongodbDatasource },
     { provide: RepositoryAbstract, useExisting: PokemonRepository },
   ],
-  imports: [mongooseModule]
+  imports: [
+    mongooseModule,
+    ConfigModule
+  ]
 })
 export class PokemonModule { }

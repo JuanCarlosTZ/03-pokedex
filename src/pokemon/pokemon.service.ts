@@ -4,12 +4,17 @@ import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { Pokemon } from './entities/pokemon.entity';
 import { RepositoryAbstract } from './abstracts/repository.abstract';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PokemonService {
+  readonly limit: number;
   constructor(
     private readonly repository: RepositoryAbstract,
-  ) { }
+    private readonly configService: ConfigService,
+  ) {
+    this.limit = configService.get('default_pagination_limit');
+  }
 
   async create(createPokemonDto: CreatePokemonDto): Promise<Pokemon> {
     try {
@@ -23,7 +28,7 @@ export class PokemonService {
 
   async findAll(paginationDto: PaginationDto): Promise<Pokemon[]> {
     const { limit, offset } = paginationDto;
-    paginationDto.limit = limit ?? 20;
+    paginationDto.limit = limit ?? this.limit;
     paginationDto.offset = offset ?? 0;
 
     try {
