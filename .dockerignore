@@ -1,0 +1,6 @@
+# Docker Files to ignore
+dist/
+node_modules/
+
+.git/
+.gitignore

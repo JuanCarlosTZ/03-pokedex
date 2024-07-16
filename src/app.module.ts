@@ -21,7 +21,7 @@ const staticModule = ServeStaticModule.forRoot({
 
 const mongooseModule = MongooseModule.forRoot(
   process.env.MONGODB,
-  { dbName: process.env.MONGODB }
+  { dbName: process.env.DATABASE_NAME }
 )
 
 @Module({

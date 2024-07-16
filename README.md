@@ -2,7 +2,7 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
-#Ejecutar en desarrollo
+# Ejecutar en desarrollo
 
 1. Clonar el repositorio
 
@@ -35,7 +35,19 @@ yarn start:dev
 GET - http://localhost:3000/api/v2/seed
 ```
 
-#Stack usado
+## Stack usado
 
 * MongoDB
 * Nest
+
+
+# Ejecutar en producción
+
+1. Crear el archivo ```.env.prod```
+
+2. Llenar las variables de entorno de producción
+
+3. Crear la nueva imagen
+```
+docker-compose -f docker-compose.prod.yaml --env-file .env.prod up --build
+```

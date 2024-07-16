@@ -6,6 +6,7 @@
 
 # Configurations
 .env
+.env.prod
 
 # Logs
 logs
